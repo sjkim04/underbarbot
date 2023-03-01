@@ -1,7 +1,8 @@
-const { REST, Routes } = require('discord.js');
+const { REST, Routes, Client, GatewayIntentBits } = require('discord.js');
 const { clientId, guildId, token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
+const { Jejudo } = require('jejudo');
 
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
@@ -14,6 +15,15 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
+const client = new Client({ intents: GatewayIntentBits.Guilds });
+
+client.jejudo = new Jejudo(client, {
+	prefix: '<@768092416846069760> ',
+	textCommand: 'jejudo',
+});
+
+commands.push(client.jejudo.commandJSON);
+
 // Construct and prepare an instance of the REST module
 const rest = new REST({ version: '10' }).setToken(token);
 
@@ -24,11 +34,6 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data = await rest.put(
-			/** global command refresh script:
-			 Routes.applicationCommands(clientId, guildId),
-			{ body: commands },
-			*/
-
 			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: commands },
 		);
@@ -36,6 +41,7 @@ const rest = new REST({ version: '10' }).setToken(token);
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	}
 	catch (error) {
+		// And of course, make sure you catch and log any errors!
 		console.error(error);
 	}
-});
+})();

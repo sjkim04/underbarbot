@@ -1,11 +1,32 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Team, User } = require('discord.js');
 const { token } = require('./config.json');
+const { Jejudo } = require('jejudo');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages] });
+
+client.jejudo = new Jejudo(client, {
+	isOwner: (user) => owners.includes(user.id),
+	prefix: '<@768092416846069760> ',
+	textCommand: 'jejudo',
+});
+
+let owners = [];
+
+client.once('ready', async () => {
+	const owner = (await client.application?.fetch())?.owner;
+
+	if (owner instanceof Team) {
+		owners = owner.members.map((x) => x.id);
+	}
+	else if (owner instanceof User) {
+		owners = [owner.id];
+	}
+	console.log('ready');
+});
 
 client.commands = new Collection();
 
@@ -31,10 +52,10 @@ for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
 	const event = require(filePath);
 	if (event.once) {
-		client.once(event.name, ...args => event.execute(...args));
+		client.once(event.name, (...args) => event.execute(...args));
 	}
 	else {
-		client.on(event.name, ...args => event.execute(...args));
+		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
 

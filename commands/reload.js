@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, Client, GatewayIntentBits, Collection } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const fs = require('node:fs');
 
@@ -10,16 +10,16 @@ module.exports = {
 	async execute(interaction) {
 
 		function loadCommands() {
-			client.commands = new Collection();
-
 			const commandsPath = path.join(__dirname, '/../commands');
 			const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 			for (const file of commandFiles) {
 				const filePath = path.join(commandsPath, file);
+				delete require.cache[require.resolve(filePath)];
 				const command = require(filePath);
 				// Set a new item in the Collection with the key as the command name and the value as the exported module
 				if ('data' in command && 'execute' in command) {
+					client.commands.delete(command.data.name);
 					client.commands.set(command.data.name, command);
 				}
 				else {
@@ -28,7 +28,7 @@ module.exports = {
 			}
 		}
 
-		const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+		const client = interaction.client;
 		const ownerId = '503447721839951884';
 
 

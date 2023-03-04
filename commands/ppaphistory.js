@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { pen, pineapple, apple, ppap } = require('./ppap.json');
+const { pen, pineapple, apple, ppap } = require('../ppap.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()

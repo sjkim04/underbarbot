@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const wait = require('node:timers/promises').setTimeout;
+const fs = require('node:fs');
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
@@ -10,7 +11,10 @@ module.exports = {
 		.setName('ppap')
 		.setDescription('ppap'),
 	async execute(interaction) {
+		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json'));
+
 		if (getRandomInt(101) === 100) {
+			jsonObject.ppap = jsonObject.ppap + 1;
 			await interaction.reply({ content: 'Ugh!', fetchReply: true });
 			await wait(1000);
 			await interaction.editReply('Pen-');
@@ -33,14 +37,19 @@ module.exports = {
 			switch (getRandomInt(3)) {
 			case 0:
 				interaction.reply('I have a pen');
+				jsonObject.pen = jsonObject.pen + 1;
 				break;
 			case 1:
 				interaction.reply('I have an apple');
+				jsonObject.apple = jsonObject.apple + 1;
 				break;
 			case 2:
 				interaction.reply('I have pineapple');
+				jsonObject.pineapple = jsonObject.pineapple + 1;
 				break;
 			}
 		}
+		console.log(jsonObject);
+		await fs.writeFileSync('./ppap.json', JSON.stringify(jsonObject));
 	},
 };

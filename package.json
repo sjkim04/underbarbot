@@ -18,9 +18,12 @@
   },
   "homepage": "https://github.com/sjkim04/underbarbot#readme",
   "dependencies": {
+    "@discordjs/voice": "^0.14.0",
     "axios": "^1.3.4",
     "discord.js": "^14.7.1",
-    "jejudo": "^0.1.4"
+    "jejudo": "^0.1.4",
+    "ytdl-core": "^4.11.2",
+    "ytsr": "^3.8.0"
   },
   "devDependencies": {
     "eslint": "^8.35.0"

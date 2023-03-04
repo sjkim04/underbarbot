@@ -66,5 +66,7 @@ function loadEvents() {
 loadCommands();
 loadEvents();
 
+client.queue = new Map();
+
 // Log in to Discord with your client's token
 client.login(token);

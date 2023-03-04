@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { pen, pineapple, apple, ppap } = require('../ppap.json');
+const fs = require('node:fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ppaphistory')
 		.setDescription('historyappleapplepen'),
 	execute(interaction) {
-		interaction.reply(`Pen: ${pen}\nPineapple: ${pineapple}\nApple: ${apple}\nPPAP: ${ppap}`);
+		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json'));
+		interaction.reply(`Pen: ${jsonObject.pen}\nPineapple: ${jsonObject.pineapple}\nApple: ${jsonObject.apple}\nPPAP: ${jsonObject.ppap}`);
 	},
 };

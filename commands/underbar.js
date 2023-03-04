@@ -28,7 +28,7 @@ module.exports = {
 					key: config.GSheetsKey,
 				},
 			});
-			const { data: { values } } = await api.get('values/\'예선 제출 관리\'!I3');
+			const { data: { values } } = await api.get('values/\'예선 제출 관리\'!L3');
 			interaction.editReply(`${values[0]}명이 언더바게임 예선에 채보를 제출했습니다.`);
 		}
 	},

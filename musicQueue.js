@@ -9,6 +9,9 @@ const play = (client, guildId) => {
 	const resource = createAudioResource(ytdl(url, {
 		filter: 'audioonly',
 		quality: 'highestaudio',
+		dlChunkSize: 0,
+		bitrate: 128,
+		highWaterMark: 1 << 62,
 	}));
 	player.play(resource);
 };
@@ -17,12 +20,13 @@ const getNextResource = (client, guildId) => {
 	const queue = client.queue;
 	if (queue[guildId]) {
 		queue[guildId].playlist.shift();
-		if (queue[guildId].playlist.length === 0) {
+		if (queue[guildId].playlist.length == 0) {
 			delete queue[guildId];
 		}
 		else {
-			play(guildId);
+			play(client, guildId);
 		}
+		client.queue = queue;
 	}
 };
 

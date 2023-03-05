@@ -11,6 +11,11 @@ module.exports = {
 		.setName('ppap')
 		.setDescription('ppap'),
 	async execute(interaction) {
+		if (interaction.user.id === 'asdf952161630941237298') {
+			interaction.reply({ content: '잠깐만 좀 그만해 보세요', ephemeral: true });
+			return false;
+		}
+
 		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json'));
 
 		if (getRandomInt(101) === 100) {

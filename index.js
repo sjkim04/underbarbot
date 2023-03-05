@@ -1,12 +1,17 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection, Team, User } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Team, User, ActivityType } = require('discord.js');
 const { token } = require('./config.json');
 const { Jejudo } = require('jejudo');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildVoiceStates ],
+	presence: {
+		activities: [{ name: 'UnderbarGame', type: ActivityType.Watching }],
+	},
+});
 
 client.jejudo = new Jejudo(client, {
 	isOwner: (user) => owners.includes(user.id),

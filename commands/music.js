@@ -65,6 +65,8 @@ module.exports = {
 		),
 	async execute(interaction) {
 		if (interaction.options.getSubcommand() === 'play') {
+			interaction.deferReply();
+
 			const query = interaction.options.getString('query');
 
 			const queue = interaction.client.queue;
@@ -86,7 +88,6 @@ module.exports = {
 			}
 			catch (e) {
 				const result = await search(query);
-				console.log(result);
 				if (!result) return interaction.editReply('음악을 찾을 수 없었습니다.');
 				url = result.url;
 			}
@@ -99,15 +100,17 @@ module.exports = {
 			embed.title = videoInfo.title;
 			embed.fields[0].value = secondsToMinutesAndSeconds(videoInfo.lengthSeconds);
 			embed.fields[1].value = `${videoInfo.viewCount}회`;
-			embed.fields[2].value = `[링크](${videoInfo.url})`;
+			embed.fields[2].value = `[링크](${url})`;
 			embed.footer.text = user.username;
 			embed.footer.icon_url = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`;
 			embed.thumbnail.url = `https://i.ytimg.com/vi/${videoInfo.videoId}/mqdefault.jpg`;
-			interaction.channel.send({ embeds: [embed] });
+			interaction.editReply({ embeds: [embed] });
+
+			console.log(`Adding ${videoInfo.title} by ${client.username}`);
 
 			if (!queue[interaction.guild.id]) {
 				const connection = joinVoiceChannel({
-					channelId: interaction.member.voice.channel,
+					channelId: interaction.member.voice.channel.id,
 					guildId: interaction.guild.id,
 					adapterCreator: interaction.guild.voiceAdapterCreator,
 				});
@@ -126,10 +129,14 @@ module.exports = {
 					playlist: [],
 					player: player,
 				};
+
 				queue[interaction.guild.id].playlist.push({
 					url: url,
 					embed: embed,
 				});
+
+				client.queue = queue;
+
 				play(client, interaction.guild.id);
 				return true;
 			}

@@ -1,4 +1,11 @@
 const { Events } = require('discord.js');
+const Sentry = require('@sentry/node');
+require('@sentry/tracing');
+
+Sentry.init({
+	dsn: 'https://52721668628444329fee016665a5a865@o4504789529395200.ingest.sentry.io/4504789531492352',
+	tracesSampleRate: 0,
+});
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -20,6 +27,7 @@ module.exports = {
 		catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
 			console.error(error);
+			Sentry.captureException(error);
 		}
 	},
 };

@@ -26,6 +26,7 @@
     "discord.js": "^14.7.1",
     "jejudo": "^0.1.4",
     "libsodium-wrappers": "^0.7.11",
+    "pm2": "^5.2.2",
     "ytdl-core": "^4.11.2",
     "ytsr": "github:Yonle/node-ytsr"
   },

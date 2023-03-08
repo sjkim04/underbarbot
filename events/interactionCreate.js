@@ -1,9 +1,10 @@
 const { Events } = require('discord.js');
 const Sentry = require('@sentry/node');
 require('@sentry/tracing');
+const { sentryURL } = require('../config.json');
 
 Sentry.init({
-	dsn: 'https://52721668628444329fee016665a5a865@o4504789529395200.ingest.sentry.io/4504789531492352',
+	dsn: sentryURL,
 	tracesSampleRate: 0,
 });
 
@@ -11,6 +12,21 @@ module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		interaction.client.jejudo.handleInteraction(interaction);
+
+		if (interaction.isButton && interaction.customId !== undefined) {
+			console.log(interaction.customId.slice(0, 5));
+			if (interaction.customId.slice(0, 6) === 'r2conf') {
+				const r2confhandler = require('../handlers/r2confhandler');
+				try {
+					await r2confhandler.execute(interaction);
+				}
+				catch (error) {
+					console.error(`Error executing ${interaction.commandName}`);
+					console.error(error);
+					Sentry.captureException(error);
+				}
+			}
+		}
 
 		if (!interaction.isChatInputCommand()) return;
 

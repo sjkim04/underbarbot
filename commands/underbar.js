@@ -39,7 +39,6 @@ module.exports = {
 			interaction.editReply(`${values[0]}명이 언더바게임 1라운드에 채보를 제출했습니다.`);
 		}
 		else if (interaction.options.getSubcommand() === 'r2_debuffsend') {
-			// eslint-disable-next-line no-unused-vars
 			const jsonObject = JSON.parse(fs.readFileSync('./botdata/r2.json'));
 			if (!jsonObject[interaction.user.id]) {
 				interaction.reply({ content: 'No Perms', ephemeral: true });
@@ -81,8 +80,24 @@ module.exports = {
 
 			if (buttonInteraction.customId === 'r2_yes') {
 				jsonObject[interaction.user.id]['debuff'] = debuff;
+				jsonObject[interaction.user.id]['confirmed'] = false;
 				await fs.writeFileSync('./botdata/r2.json', JSON.stringify(jsonObject));
 				buttonInteraction.reply({ content: '디버프가 전송되었습니다.', ephemeral: true });
+
+				const confchannel = interaction.client.channels.cache.get('1083010848034922616');
+				const confrow = new ActionRowBuilder()
+					.addComponents(
+						new ButtonBuilder()
+							.setCustomId(`r2conf_y_${interaction.user.id}`)
+							.setLabel('Yes')
+							.setStyle(ButtonStyle.Success),
+						new ButtonBuilder()
+							.setCustomId(`r2conf_n_${interaction.user.id}`)
+							.setLabel('No')
+							.setStyle(ButtonStyle.Danger),
+					);
+
+				await confchannel.send({ content: `새로운 디버프가 전송되었습니다!\n\n디버프: **${debuff}**\n유저: ${interaction.user} => ${opuser}`, components: [confrow] });
 			}
 			else if (buttonInteraction.customId === 'r2_no') {
 				buttonInteraction.reply({ content: '디버프 전송이 최소되었습니다.', ephemeral: true });

@@ -143,7 +143,7 @@ module.exports = {
 					.addFields(fields);
 				const embed2 = new EmbedBuilder()
 					.setTitle('2라운드 디버프 목록 (시즌2)')
-					.addFields(fields);
+					.addFields(fields2);
 
 				interaction.editReply({ embeds: [embed, embed2] });
 			}

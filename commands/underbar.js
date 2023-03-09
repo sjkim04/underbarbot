@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const axios = require('axios');
 const config = require('../config.json');
 const fs = require('node:fs');
@@ -22,6 +22,11 @@ module.exports = {
 				.setName('r2_debuffsend')
 				.setDescription('2라운드에서 줄 디버프를 전송합니다.')
 				.addStringOption(option => option.setName('debuff').setDescription('Debuff to give').setRequired(true)),
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('r2_debuffcheck')
+				.setDescription('2라운드 디버프를 확인합니다. (관리자 전용)'),
 		),
 	async execute(interaction) {
 		if (interaction.options.getSubcommand() === 'ping') {
@@ -101,6 +106,46 @@ module.exports = {
 			}
 			else if (buttonInteraction.customId === 'r2_no') {
 				buttonInteraction.reply({ content: '디버프 전송이 최소되었습니다.', ephemeral: true });
+			}
+		}
+		else if (interaction.options.getSubcommand() === 'r2_debuffcheck') {
+			if (!interaction.inGuild()) {
+				interaction.reply({ content: 'Please run this in a guild!', ephemeral: true });
+				return;
+			}
+			if (interaction.member.roles.cache.some(role => role.id === '1079041613025783929')) {
+				interaction.deferReply();
+				const jsonObject = JSON.parse(fs.readFileSync('./botdata/r2.json'));
+
+				const fields = [];
+				const fields2 = [];
+
+				for (let i = 0; i < Object.keys(jsonObject).length; i++) {
+					const me = await interaction.client.users.fetch(Object.keys(jsonObject)[i]);
+					const op = await interaction.client.users.fetch(jsonObject[Object.keys(jsonObject)[i]]['op']);
+					if (i < 24) {
+						fields[i] = {
+							name: me.tag,
+							value: `전송한 디버프: ${jsonObject[Object.keys(jsonObject)[i]]['debuff']}\n전송한 상대: ${op}`,
+						};
+					}
+					else {
+						fields2[i] = {
+							name: me.tag,
+							value: `전송한 디버프: ${jsonObject[Object.keys(jsonObject)[i]]['debuff']}\n전송한 상대: ${op}`,
+						};
+					}
+
+				}
+
+				const embed = new EmbedBuilder()
+					.setTitle('2라운드 디버프 목록')
+					.addFields(fields);
+				const embed2 = new EmbedBuilder()
+					.setTitle('2라운드 디버프 목록 (시즌2)')
+					.addFields(fields);
+
+				interaction.editReply({ embeds: [embed, embed2] });
 			}
 		}
 	},

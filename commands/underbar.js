@@ -114,7 +114,7 @@ module.exports = {
 				return;
 			}
 			if (interaction.member.roles.cache.some(role => role.id === '1079041613025783929')) {
-				interaction.deferReply();
+				await interaction.deferReply();
 				const jsonObject = JSON.parse(fs.readFileSync('./botdata/r2.json'));
 
 				const fields = [];

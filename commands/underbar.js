@@ -119,6 +119,7 @@ module.exports = {
 
 				const fields = [];
 				const fields2 = [];
+				const fields3 = [];
 
 				for (let i = 0; i < Object.keys(jsonObject).length; i++) {
 					const me = await interaction.client.users.fetch(Object.keys(jsonObject)[i]);
@@ -129,8 +130,14 @@ module.exports = {
 							value: `${jsonObject[Object.keys(jsonObject)[i]]['debuff']}`,
 						};
 					}
-					else {
+					else if (i < 49) {
 						fields2[i] = {
+							name: `${me.tag} => ${op.tag}`,
+							value: `${jsonObject[Object.keys(jsonObject)[i]]['debuff']}`,
+						};
+					}
+					else {
+						fields3[i] = {
 							name: `${me.tag} => ${op.tag}`,
 							value: `${jsonObject[Object.keys(jsonObject)[i]]['debuff']}`,
 						};
@@ -144,8 +151,11 @@ module.exports = {
 				const embed2 = new EmbedBuilder()
 					.setTitle('2라운드 디버프 목록 (시즌2)')
 					.addFields(fields2);
+				const embed3 = new EmbedBuilder()
+					.setTitle('2라운드 디버프 목록 (시즌3)')
+					.addFields(fields3);
 
-				interaction.editReply({ embeds: [embed, embed2] });
+				interaction.editReply({ embeds: [embed, embed2, embed3] });
 			}
 		}
 	},

@@ -125,14 +125,14 @@ module.exports = {
 					const op = await interaction.client.users.fetch(jsonObject[Object.keys(jsonObject)[i]]['op']);
 					if (i < 24) {
 						fields[i] = {
-							name: me.tag,
-							value: `전송한 디버프: ${jsonObject[Object.keys(jsonObject)[i]]['debuff']}\n전송한 상대: ${op}`,
+							name: `${me.tag} => ${op.tag}`,
+							value: `${jsonObject[Object.keys(jsonObject)[i]]['debuff']}`,
 						};
 					}
 					else {
 						fields2[i] = {
-							name: me.tag,
-							value: `전송한 디버프: ${jsonObject[Object.keys(jsonObject)[i]]['debuff']}\n전송한 상대: ${op}`,
+							name: `${me.tag} => ${op.tag}`,
+							value: `${jsonObject[Object.keys(jsonObject)[i]]['debuff']}`,
 						};
 					}
 

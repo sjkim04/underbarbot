@@ -21,6 +21,6 @@ module.exports = {
 		const rootJsonObject = JSON.parse(fs.readFileSync('./ppap.json', 'utf-8'));
 		const jsonObject = rootJsonObject[option];
 		
-		interaction.reply(`${option.toUpperCase()}의 ppap 성적:\nPen: ${jsonObject.pen}\nPineapple: ${jsonObject.pineapple}\nApple: ${jsonObject.apple}\nPPAP: ${jsonObject.ppap}\n\n확률: ${Math.round(((jsonObject.pen + jsonObject.pineapple + jsonObject.apple + jsonObject.ppap) / jsonObject.ppap) * 1000) / 1000}`);
+		interaction.reply(`${option.toUpperCase()}의 ppap 성적:\nPen: ${jsonObject.pen}\nPineapple: ${jsonObject.pineapple}\nApple: ${jsonObject.apple}\nPPAP: ${jsonObject.ppap}\n\n확률: 1/${Math.round(((jsonObject.pen + jsonObject.pineapple + jsonObject.apple + jsonObject.ppap) / jsonObject.ppap) * 1000) / 1000}`);
 	},
 };

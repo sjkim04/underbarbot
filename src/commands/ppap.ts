@@ -1,8 +1,9 @@
-const { SlashCommandBuilder } = require('discord.js');
+import { SlashCommandBuilder } from 'discord.js';
 const wait = require('node:timers/promises').setTimeout;
-const fs = require('node:fs');
+import fs from 'node:fs';
+import { UpdatedInteraction } from '..';
 
-function getRandomInt(max) {
+function getRandomInt(max: number) {
 	return Math.floor(Math.random() * max);
 }
 
@@ -10,8 +11,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ppap')
 		.setDescription('ppap'),
-	async execute(interaction) {
-		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json'));
+	async execute(interaction: UpdatedInteraction) {
+		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json', 'utf-8'));
 
 		if (getRandomInt(101) === 100) {
 			jsonObject.ppap = jsonObject.ppap + 1;
@@ -50,6 +51,6 @@ module.exports = {
 			}
 		}
 		console.log(jsonObject);
-		await fs.writeFileSync('./ppap.json', JSON.stringify(jsonObject));
+		fs.writeFileSync('./ppap.json', JSON.stringify(jsonObject));
 	},
 };

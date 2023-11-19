@@ -1,13 +1,18 @@
-const { SlashCommandBuilder } = require('discord.js');
-const path = require('node:path');
-const fs = require('node:fs');
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import path from 'node:path';
+import fs from 'node:fs';
+import { UpdatedClient, UpdatedInteraction } from '..';
 
 
 module.exports = {
+	checkPerms: {
+		condition: interaction => interaction.client.jejudo.isOwner(interaction.user),
+		permsName: '봇 소유자',
+	},
 	data: new SlashCommandBuilder()
 		.setName('reload')
-		.setDescription('Reloads commands'),
-	async execute(interaction) {
+		.setDescription('명령어를 다시 불러옵니다.'),
+	async execute(interaction: UpdatedInteraction) {
 
 		function loadCommands() {
 			const commandsPath = path.join(__dirname, '/../commands');
@@ -28,11 +33,8 @@ module.exports = {
 			}
 		}
 
-		const client = interaction.client;
-		const ownerId = '503447721839951884';
-
-
-		if (interaction.user.id === ownerId) {
+		const client: UpdatedClient = interaction.client;
+		if (client.jejudo.isOwner(interaction.user)) {
 			await interaction.reply({ content: 'Reloading commands...', ephemeral: true });
 			await loadCommands();
 			await interaction.editReply('Reloaded all commands.');

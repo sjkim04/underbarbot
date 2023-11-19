@@ -15,7 +15,7 @@ module.exports = {
 		const jsonObject = JSON.parse(fs.readFileSync('./ppap.json', 'utf-8'));
 
 		if (getRandomInt(101) === 100) {
-			jsonObject.ppap = jsonObject.ppap + 1;
+			jsonObject.s2.ppap = jsonObject.s2.ppap + 1;
 			await interaction.reply({ content: 'Ugh!', fetchReply: true });
 			await wait(1000);
 			await interaction.editReply('Pen-');
@@ -38,19 +38,18 @@ module.exports = {
 			switch (getRandomInt(3)) {
 			case 0:
 				interaction.reply('I have a pen');
-				jsonObject.pen = jsonObject.pen + 1;
+				jsonObject.s2.pen = jsonObject.s2.pen + 1;
 				break;
 			case 1:
 				interaction.reply('I have an apple');
-				jsonObject.apple = jsonObject.apple + 1;
+				jsonObject.s2.apple = jsonObject.s2.apple + 1;
 				break;
 			case 2:
 				interaction.reply('I have pineapple');
-				jsonObject.pineapple = jsonObject.pineapple + 1;
+				jsonObject.s2.pineapple = jsonObject.s2.pineapple + 1;
 				break;
 			}
 		}
-		console.log(jsonObject);
 		fs.writeFileSync('./ppap.json', JSON.stringify(jsonObject));
 	},
 };

@@ -1,5 +1,7 @@
 {
     "tabWidth": 4,
+    "printWidth": 100,
+    "nonblock-statement-body-position": "beside",
     "useTabs": false,
     "singleQuote": true
 }
